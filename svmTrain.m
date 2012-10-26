@@ -21,9 +21,13 @@ global C;
 global b;
 
 % global definition
-global tr_ins_num = length(train_set.fea);
-global alpha = repmat(0.0, tr_ins_num, 1);
-global error_cache = 0 - train_set.tag;
+global tr_ins_num;
+tr_ins_num = size(train_set.fea, 1);
+global alpha;
+alpha = repmat(0.0, tr_ins_num, 1);
+global error_cache;
+%error_cache = 0 - train_set.tag;
+error_cache = repmat(0.0, tr_ins_num, 1);
 
 num_changed = 0;    % number of variable updating happend
 examine_all = 1;    % scan all train instance
@@ -40,6 +44,7 @@ while num_changed > 0 || examine_all,
     else,
         for i=1:tr_ins_num,
             if alpha(i) > 0 && alpha(i) < C,
+                disp('seperating point');
                 num_changed = num_changed + examineSample(i);
             end
         end

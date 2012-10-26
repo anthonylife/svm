@@ -10,12 +10,12 @@ n_total = 0;
 n_error = 0;
 
 for i=1:tr_ins_num,
-    p_tag = (train_set.fea(i)*alpha + b) > 0;
+    p_tag = ((alpha.*train_set.tag)'*(train_set.fea*train_set.fea(i,:)') - b) > 0;
     if ~p_tag,
         p_tag = -1;
     end
     if p_tag ~= train_set.tag(i),
-        n_error += 1;
+        n_error = n_error+1;
     end
 end
 

@@ -22,12 +22,18 @@ global tr_ins_num;
 
 y1 = train_set.tag(i1);
 alpha1 = alpha(i1);
-E1 = error_cache(i1);
+if alpha1>0&&alpha1<C,
+    E1 = error_cache(i1);
+else,
+    E1 = learned_func(i1) - y1;
+end
 
 r1 = y1*E1;
+disp('i1,y1,alpha1,')
+i1,y1,alpha1
+pause;
 
-if (r1 < -tolerance && alpha1 < C) || (r1 > tolerance && ...
-    alpha1 > 0),
+if (r1 < -tolerance & alpha1 < C) | (r1 > tolerance & alpha1 > 0),
     % 1.find one maximize |E2-E1|;
     i2 = -1;
     tmax = 0;
@@ -41,9 +47,13 @@ if (r1 < -tolerance && alpha1 < C) || (r1 > tolerance && ...
             end
         end
     end
+    disp('i2, tmax');
+    i2
+    pause;
     if i2 > 0,
         if takeStep(i1, i2),
-            return 1;
+            status = 1;
+            return; 
         end
     end
 
@@ -53,7 +63,8 @@ if (r1 < -tolerance && alpha1 < C) || (r1 > tolerance && ...
         i2 = rem(k, tr_ins_num)+1;
         if alpha(i2) > 0 && alpha(i2) < C,
             if takeStep(i1, i2),
-                return 1;
+                status = 1;
+                return;
             end
         end
     end
@@ -63,9 +74,11 @@ if (r1 < -tolerance && alpha1 < C) || (r1 > tolerance && ...
     for k=k0:tr_ins_num+k0-1,
         i2 = rem(k, tr_ins_num)+1;
         if takeStep(i1, i2),
-            return 1;
+            status = 1;
+            return;
         end
     end
 end
 
-return 0;
+status = 0;
+return ;
