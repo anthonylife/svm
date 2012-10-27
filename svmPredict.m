@@ -3,7 +3,7 @@
 %  Note: hockey '1'; baseball '2'.
 %  @date: 10/26/2012
 
-function [F1_score, F2_score] = svmPredict(alpha)
+function [F1_score, precision1, recall1, F2_score, precision2, recall2] = svmPredict(alpha)
 % defined in other place
 global train_set;
 global test_set;

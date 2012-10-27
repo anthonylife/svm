@@ -51,7 +51,7 @@ if ~exist('RBF', 'var'),
 end
 
 if RBF == 1,
-    kernel_func = @linearKernel;  %switch to rbf kernel
+    kernel_func = @rbfKernel;  %switch to rbf kernel
 elseif RBF == 0,
     kernel_func = @linearKernel;   %default linear kernel
 end
@@ -83,7 +83,7 @@ ins_files(part_num).tag = ins_tag(rr(temp_idx:end),:);
 % 5-cross validation
 % ==================
 for i=1:cross_eval_num,
-    fprintf('Corss validation:%d...\n', i);
+    fprintf('Cross validation:%d...\n', i);
     test_set = ins_files(i);
     for j=1:part_num,
         if j~=i,
@@ -102,13 +102,16 @@ for i=1:cross_eval_num,
     % ----------------------------------------------------
 
     % Implict passing parameter, using global parameter instead.
+    tic;
     alpha = svmTrain();
+    toc;
     %alpha
     err = trainError(alpha);
     fprintf('Train error: %f...\n', err);
     
-    [F1_score, F2_score] = svmPredict(alpha);
-    fprintf('Test result:\nF score for hockey: %f, F score for baseball: %f...\n', F1_score, F2_score);
+    [F1_score, pre1, recall1, F2_score, pre2, recall2] = svmPredict(alpha);
+    fprintf('Test result:\nHockey-->> Precision:%f; Recall:%f; F:%f!\n', pre1, recall1, F1_score); 
+    fprintf('Baseball-->> Precision:%f; Recall:%f; F:%f!\n', pre2, recall2, F2_score);
     
     train_set.fea = [];
     train_set.tag = [];

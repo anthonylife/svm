@@ -152,7 +152,6 @@ error_cache = error_cache + t1*kernel_func(...
     train_set.fea, train_set.fea(i1,:)) + t2* ...
     kernel_func(train_set.fea, train_set.fea(i2,:))-delta_b;
 
-
 % force
 error_cache(i1) = 0;
 error_cache(i2) = 0;

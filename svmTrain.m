@@ -61,6 +61,6 @@ while num_changed > 0 | examine_all,
         examine_all = 1;
     end
 
-    iter_num = iter_num + 1
+    %iter_num = iter_num + 1
     if iter_num == maxIter, break; end
 end
