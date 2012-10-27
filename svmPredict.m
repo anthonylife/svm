@@ -7,6 +7,7 @@ function [F1_score, F2_score] = svmPredict(alpha)
 % defined in other place
 global train_set;
 global test_set;
+global kernel_func;
 global b;
 
 te_ins_num = length(test_set.tag);
@@ -19,7 +20,7 @@ tp_fn_hockey = 0;
 tp_fn_baseball = 0;
 
 % prediction
-pre_tag = (alpha.*train_set.tag)'*train_set.fea*test_set.fea' - b;
+pre_tag = (alpha.*train_set.tag)'*kernel_func(train_set.fea, test_set.fea) - b;
 pre_tag(find(pre_tag>0)) = 1;
 pre_tag(find(pre_tag~=1)) = -1;
 

@@ -15,18 +15,18 @@
 %
 
 function alpha = svmTrain()
-% defined in other place
+% Defined in other place
 global train_set;
 global C;
 global b;
 
-% global definition
+% Global definition
 global tr_ins_num;
 tr_ins_num = size(train_set.fea, 1);
 global alpha;
 alpha = repmat(0.0, tr_ins_num, 1);
-global error_cache;
-%error_cache = 0 - train_set.tag;
+global error_cache; % Function:ensure not to find same (a1,a2) 
+                    %   continously.
 error_cache = repmat(0.0, tr_ins_num, 1);
 
 num_changed = 0;    % number of variable updating happend
@@ -35,26 +35,27 @@ examine_all = 1;    % scan all train instance
 % Loop alpha with value > 0 && value < C first.
 % Note: for the first time, as all alpha equa to
 %   0, loop all alpha first.
-while num_changed > 0 || examine_all,
+while num_changed > 0 | examine_all,
     num_changed = 0;
     if examine_all,
         for i=1:tr_ins_num,
+            %disp('Non seperating point');
             num_changed = num_changed + examineSample(i);
         end
     else,
         for i=1:tr_ins_num,
-            if alpha(i) > 0 && alpha(i) < C,
-                disp('seperating point');
+            if alpha(i) > 0 & alpha(i) < C,
+                %disp('seperating point');
                 num_changed = num_changed + examineSample(i);
             end
         end
     end
 
     % when examine_all = 0, if num_changed = 0, loop exit.
-    if examine_all,
+    if examine_all == 1,
         examine_all = 0;
     % setting to scan all alpha variables
-    elseif ~num_changed,
+    elseif num_changed == 0,
         examine_all = 1;
     end
 end

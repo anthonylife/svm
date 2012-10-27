@@ -5,4 +5,4 @@ global alpha;
 global kernel_func;
 global b;
 
-err = (alpha.*train_set.tag)'*(train_set.fea*train_set.fea(i,:)') - b;
+err = (alpha.*train_set.tag)'*(kernel_func(train_set.fea, train_set.fea(i,:))) - b;

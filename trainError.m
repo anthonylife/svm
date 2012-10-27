@@ -4,20 +4,16 @@ function err = trainError(alpha)
 % defined in other place
 global train_set;
 global tr_ins_num;
+global kernel_func;
 global b;
 
 n_total = 0;
 n_error = 0;
 
-for i=1:tr_ins_num,
-    p_tag = ((alpha.*train_set.tag)'*(train_set.fea*train_set.fea(i,:)') - b) > 0;
-    if ~p_tag,
-        p_tag = -1;
-    end
-    if p_tag ~= train_set.tag(i),
-        n_error = n_error+1;
-    end
-end
+p_tag = repmat(-1, tr_ins_num, 1);
+p_tag(find(((alpha.*train_set.tag)'*kernel_func(train_set.fea, train_set.fea) - b) > 0)) = 1;
+
+n_error = sum(find(p_tag ~= train_set.tag));
 
 n_total = tr_ins_num;
 err = n_error/n_total;

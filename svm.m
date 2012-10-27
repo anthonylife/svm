@@ -27,7 +27,7 @@ test_set = struct('fea', [], 'tag', []);
 % Model paramter
 % --------------
 global C;
-C = 100;   %penalty parameter for slack variable
+C = 10;   %penalty parameter for slack variable
 global tolerance;
 tolerance = 0.001;  %tolerable error rate
 global eps;
@@ -51,7 +51,7 @@ if ~exist('RBF', 'var'),
 end
 
 if RBF == 1,
-    kernel_func = @rbfKernel;  %switch to rbf kernel
+    kernel_func = @linearKernel;  %switch to rbf kernel
 elseif RBF == 0,
     kernel_func = @linearKernel;   %default linear kernel
 end
@@ -60,7 +60,7 @@ end
 % =========================================
 ins_tag = load(cate_tag_f);
 ins_feature = load(ins_fea_f);
-ins_fea_mat = spconvert(ins_feature);   %load sparse features
+ins_fea_mat = spconvert(ins_feature);   %convert sparse rep
 clear ins_feature;
 
 % 3. Choose 4 file as train data and train svm model paramter
@@ -91,22 +91,25 @@ for i=1:cross_eval_num,
         end
     end
     
-    % For testing algorithm
-    train_set.fea = [];
-    train_set.tag = [];
-    % Make test data
-    train_set.fea = [2,1;1,1;-1,1;1,-1;-1,-1];
-    train_set.tag = [1;1;-1;-1;-1];
+    % Test Sample
+    % ----------------------------------------------------
+    train_set.fea = [];                                %|
+    train_set.tag = [];                                %|
+    % Make test data                                    %|
+    train_set.fea = [2,1;0.5,0.5;1,1;-1,1;1,-1;-1,-1]; %|
+    train_set.tag = [1;-1;1;-1;-1;-1];                 %|
+    % ----------------------------------------------------
 
     % Implict passing parameter, using global parameter instead.
     alpha = svmTrain();
     alpha
     err = trainError(alpha);
     fprintf('Train error: %f...\n', err);
-    
     pause;
+    
     [F1_score, F2_score] = svmPredict(alpha);
     fprintf('Test result:\nF score for hockey: %f, F score for baseball: %f...', F1_score, F2_score);
+    pause;
     
     train_set.fea = [];
     train_set.tag = [];

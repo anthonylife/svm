@@ -22,23 +22,21 @@ global tr_ins_num;
 
 y1 = train_set.tag(i1);
 alpha1 = alpha(i1);
-if alpha1>0&&alpha1<C,
+if alpha1>0&alpha1<C,
     E1 = error_cache(i1);
 else,
     E1 = learned_func(i1) - y1;
 end
 
 r1 = y1*E1;
-disp('i1,y1,alpha1,')
-i1,y1,alpha1
-pause;
 
 if (r1 < -tolerance & alpha1 < C) | (r1 > tolerance & alpha1 > 0),
     % 1.find one maximize |E2-E1|;
+    % Optimize before,
     i2 = -1;
     tmax = 0;
     for k=1:tr_ins_num,
-        if alpha(k) > 0 && alpha(k) < C,
+        if alpha(k) > 0 & alpha(k) < C,
             E2 = error_cache(k);
             temp = abs(E1-E2);
             if temp > tmax,
@@ -47,38 +45,42 @@ if (r1 < -tolerance & alpha1 < C) | (r1 > tolerance & alpha1 > 0),
             end
         end
     end
-    disp('i2, tmax');
-    i2
-    pause;
     if i2 > 0,
         if takeStep(i1, i2),
-            status = 1;
-            return; 
+            status = 1; return; 
         end
     end
+
+    % Optimize after,
+    %{
+    idxs = find((alpha>0) & (alpha<C));
+    [MAX, i2] = max(abs(E1-error_cache(idxs)));
+    if ~isempty(i2)
+        if takeStep(i1, i2), status=1; return; end;
+    end
+    %}
 
     % 2.find one on the separating boundary;
     k0 = unidrnd(tr_ins_num);
     for k=k0:tr_ins_num+k0-1,
         i2 = rem(k, tr_ins_num)+1;
+    %for i2 = 1:tr_ins_num
         if alpha(i2) > 0 && alpha(i2) < C,
             if takeStep(i1, i2),
-                status = 1;
-                return;
+                status = 1; return;
             end
         end
     end
 
     % 3.loop all variables.
-    k0 = unidrnd(tr_ins_num)
+    k0 = unidrnd(tr_ins_num);
     for k=k0:tr_ins_num+k0-1,
         i2 = rem(k, tr_ins_num)+1;
+    %for i2 = 1:tr_ins_num
         if takeStep(i1, i2),
-            status = 1;
-            return;
+            status = 1; return;
         end
     end
 end
 
-status = 0;
-return ;
+status = 0; return ;
