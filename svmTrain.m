@@ -26,8 +26,9 @@ tr_ins_num = size(train_set.fea, 1);
 global alpha;
 alpha = repmat(0.0, tr_ins_num, 1);
 global error_cache; % Function:ensure not to find same (a1,a2) 
-                    %   continously.
+                    %   continously
 error_cache = repmat(0.0, tr_ins_num, 1);
+maxIter = 50;
 
 num_changed = 0;    % number of variable updating happend
 examine_all = 1;    % scan all train instance
@@ -35,6 +36,7 @@ examine_all = 1;    % scan all train instance
 % Loop alpha with value > 0 && value < C first.
 % Note: for the first time, as all alpha equa to
 %   0, loop all alpha first.
+iter_num = 0;
 while num_changed > 0 | examine_all,
     num_changed = 0;
     if examine_all,
@@ -58,4 +60,7 @@ while num_changed > 0 | examine_all,
     elseif num_changed == 0,
         examine_all = 1;
     end
+
+    iter_num = iter_num + 1
+    if iter_num == maxIter, break; end
 end

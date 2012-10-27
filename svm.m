@@ -27,7 +27,7 @@ test_set = struct('fea', [], 'tag', []);
 % Model paramter
 % --------------
 global C;
-C = 10;   %penalty parameter for slack variable
+C = 0.05;   %penalty parameter for slack variable
 global tolerance;
 tolerance = 0.001;  %tolerable error rate
 global eps;
@@ -83,6 +83,7 @@ ins_files(part_num).tag = ins_tag(rr(temp_idx:end),:);
 % 5-cross validation
 % ==================
 for i=1:cross_eval_num,
+    fprintf('Corss validation:%d...\n', i);
     test_set = ins_files(i);
     for j=1:part_num,
         if j~=i,
@@ -93,23 +94,21 @@ for i=1:cross_eval_num,
     
     % Test Sample
     % ----------------------------------------------------
-    train_set.fea = [];                                %|
-    train_set.tag = [];                                %|
+    %train_set.fea = [];                                %|
+    %train_set.tag = [];                                %|
     % Make test data                                    %|
-    train_set.fea = [2,1;0.5,0.5;1,1;-1,1;1,-1;-1,-1]; %|
-    train_set.tag = [1;-1;1;-1;-1;-1];                 %|
+    %train_set.fea = [2,1;0.5,0.5;1,1;-1,1;1,-1;-1,-1]; %|
+    %train_set.tag = [1;-1;1;-1;-1;-1];                 %|
     % ----------------------------------------------------
 
     % Implict passing parameter, using global parameter instead.
     alpha = svmTrain();
-    alpha
+    %alpha
     err = trainError(alpha);
     fprintf('Train error: %f...\n', err);
-    pause;
     
     [F1_score, F2_score] = svmPredict(alpha);
-    fprintf('Test result:\nF score for hockey: %f, F score for baseball: %f...', F1_score, F2_score);
-    pause;
+    fprintf('Test result:\nF score for hockey: %f, F score for baseball: %f...\n', F1_score, F2_score);
     
     train_set.fea = [];
     train_set.tag = [];

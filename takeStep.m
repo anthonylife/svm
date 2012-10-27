@@ -75,7 +75,7 @@ if eta < 0,
     end
 else
     c1 = eta/2;
-    c2 = y2*(E1-E2)-eta*alph2;
+    c2 = y2*(E1-E2)-eta*alpha2_old;
     lobj_re = c1*L*L+c2*L;
     hobj_re = c1*H*H+c2*H;
     % variation of the objective function value
@@ -107,7 +107,12 @@ end
 
 % calculate value of objective function.
 [objval_old, objval_new]= objvalue(alpha1_new, i1, alpha2_new, i2);
-fprintf('Old objective value:%f;New objective value: %f!\n', objval_old, objval_new);
+%fprintf('Old objective value:%f;    New objective value: %f!\n', objval_old, objval_new);
+
+%if abs(objval_new - objval_old)==0,
+if objval_new > objval_old,
+    status=0; return;
+end
 %pause;
 %if (objval_new - objval_old) < eps,
 %    status = 0; return;
@@ -155,9 +160,9 @@ error_cache(i2) = 0;
 alpha(i1) = alpha1_new;
 alpha(i2) = alpha2_new;
 
-disp('Seperating line');
-sp = sum((alpha.*train_set.tag)'*train_set.fea, 1)
-b
+%disp('Seperating line');
+%sp = sum((alpha.*train_set.tag)'*train_set.fea, 1)
+%b
 %pause;
 
 status = 1; return ;

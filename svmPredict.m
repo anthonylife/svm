@@ -26,9 +26,8 @@ pre_tag(find(pre_tag~=1)) = -1;
 
 tp_fp_hockey = length(find(pre_tag == 1));
 tp_fp_baseball = length(find(pre_tag == -1));
-
-tp_hockey = length(find(pre_tag == test_set.tag == 1));
-tp_baseball = length(find(pre_tag == test_set.tag == -1));
+tp_hockey = length(intersect(find(pre_tag == 1), find(test_set.tag == 1)));
+tp_baseball = length(intersect(find(pre_tag == -1), find(test_set.tag == -1)));
 
 tp_fn_hockey = length(find(test_set.tag == 1));
 tp_fn_baseball = length(find(test_set.tag == -1));
@@ -36,7 +35,7 @@ tp_fn_baseball = length(find(test_set.tag == -1));
 precision1 = tp_hockey/tp_fp_hockey;
 recall1 = tp_hockey/tp_fn_hockey;
 precision2 = tp_baseball/tp_fp_baseball;
-recall2 = tp_baseball/fp_fn_baseball;
+recall2 = tp_baseball/tp_fn_baseball;
 
 F1_score = 2*precision1*recall1/(precision1+recall1);
 F2_score = 2*precision2*recall2/(precision2+recall2);
