@@ -112,7 +112,7 @@ for i=1:cross_eval_num,
     [F1_score, pre1, recall1, F2_score, pre2, recall2] = svmPredict(alpha);
     fprintf('Test result:\nHockey-->> Precision:%f; Recall:%f; F:%f!\n', pre1, recall1, F1_score); 
     fprintf('Baseball-->> Precision:%f; Recall:%f; F:%f!\n', pre2, recall2, F2_score);
-    
+
     train_set.fea = [];
     train_set.tag = [];
 end

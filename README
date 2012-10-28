@@ -1,0 +1,124 @@
+@author:anthonylife
+@date:10/27/2012
+
+Support vector machine for classifying mail.
+This program refers to Platt's pseud-code.
+Procedure: 
+  1.Extract main text from mails and create word tokens;
+  2.Get the stem of words and remove stop words;
+  3.Word Feature Selection by gini index and frequency
+  4.Compute TF-IDF and output feature file
+  5. Five-fold cross validation
+    5.1 partition
+    5.2 train
+    5.3 test
+    5.4 average and get F-score
+
+
+Third-parity libaries and software
+=====================
+
+nltk(python): http://nltk.org/
+    -- I use nltk.word_tokenize() function to seperate the irregular mail text.
+
+porter stem(python): http://pypi.python.org/pypi/stemming/1.0
+    -- I use stemming.porter2.stem() function to get stemming words.
+
+matlab:
+    -- model implemented using matlab.
+
+Quick Start
+===========
+run.py:
+    -- It includes all the pre-process code in this programming. In order to run this script, people should install all the third-party python libaries, including nltk, porter stemmer.
+
+svm.m:
+    -- Main function of support vector machine model code.
+
+Directory:
+    | python
+        || extracText.py
+            -- Extract main text from mails
+        || computefeature.py
+            -- Calculate TF-IDF of words
+        || loadStopwords.py
+            -- Load stop wrods from dictionary
+        || featureSelection.py
+            -- Feature selection by word freq and gini index
+        || sparseRep.py
+            -- Convert feature matrix to sparse representation
+        || ...
+    | model_code
+        || svm.m
+            -- Main function of SVM, calling svmTrain and svmPredict.
+        || svmTrain.m
+            -- Training SVM model parameters,calling examineSample.
+        || examineSample.m
+            -- Choose variable pair, calling takeStep.
+        || takeStep.m
+            -- Update variables, error cache and so on.
+        || objvalue.m
+            -- Calculate target value of optimization objective function.
+        || trainError.m
+            -- Error of training examples.
+        || svmPredict.m
+            -- Prediction on test data.
+        || learned_func.m
+        || linearKernel.m
+        || rbfKernel.m
+
+
+How To Run
+==========
+    -- ./run.py (Not necessary)
+    -- cd ./model_code
+    -- matlab (Start matlab software)
+    -- svm (svm.m)
+
+    Additionaly, in order to verity whether the program can find 
+    the maximal margin, we have a short test data sample in 'svm.m'.
+    We can test by simply canceling the comment.
+
+Final result of 5-cross validation
+==================================
+Note: After we run outer loops 20 times, we can get the following
+      answer.
++============================================================+
+|               Final Result for Hockey                      |   
++============================================================+
+|         |    Precision   |      Recall    |        F1      |
++---------+----------------+----------------+----------------+
+| Round 1 |    0.984043    |     0.963542   |     0.973684   |
++---------+----------------+----------------+----------------+
+| Round 2 |    0.989796    |     0.970000   |     0.979798   |
++---------+----------------+----------------+----------------+
+| Round 3 |    0.983607    |     0.972903   |     0.978261   |
++---------+----------------+----------------+----------------+
+| Round 4 |    0.995000    |     0.975490   |     0.985149   |
++---------+----------------+----------------+----------------+
+| Round 5 |    0.989950    |     0.985000   |     0.987469   |
++============================================================+
+
++============================================================+
+|               Final Result for Baseball                    |   
++============================================================+
+|         |    Precision   |      Recall    |        F1      |
++---------+----------------+----------------+----------------+
+| Round 1 |    0.966019    |     0.985149   |     0.975490   |
++---------+----------------+----------------+----------------+
+| Round 2 |    0.969697    |     0.989691   |     0.979592   |
++---------+----------------+----------------+----------------+
+| Round 3 |    0.976303    |     0.985646   |     0.980952   |
++---------+----------------+----------------+----------------+
+| Round 4 |    0.974227    |     0.994737   |     0.984735   |
++---------+----------------+----------------+----------------+
+| Round 5 |    0.984375    |     0.989529   |     0.986945   |
++============================================================+
+
+Conclusion:
+  1. We can get better performance than perceptron learning algorithm
+     using SVM, with more than 1.5%.
+
+Notes:
+  1. Model parameter C should be setted larger when training data only 
+     have several points.
